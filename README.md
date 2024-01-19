@@ -1,6 +1,6 @@
-# 1D Algorithms in Python
+# 1D Optimization Algorithms in Python
 
-This code file contains basic Python implementations of algorithms for finding roots and minima of one-dimensional functions.
+This code file contains basic Python implementations of optimization algorithms for finding roots and minima of one-dimensional functions.
 **Note:** It uses the NumPy library so make sure you have it  installed before running the code:
 ```bash
 pip install numpy
@@ -34,7 +34,7 @@ The implemented algorithms include:
 ### Usage
 ```python
 import numpy as np
-from algorithms_1d import *
+from opt_1d import *
 
 # Define a function
 def f(x):
