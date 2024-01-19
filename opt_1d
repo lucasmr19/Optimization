@@ -226,7 +226,7 @@ def min_bracket(f: Callable, a: float, b: float, delta=.1) -> Tuple[float, float
 
 
 def trisection(f: Callable, bracket: Tuple[float, float, float], xtol=1e-6, maxiter=100) -> Tuple[float, int, int]:
-   """
+    """
     Receives a function f, a tuple bracket defining a bracket of f, and, starting from that bracket, returns a tuple
     r, nit, nfev with an approximate minimum r and the numbers of iterations and function evaluations needed to find it
     using the trisection method.
@@ -334,4 +334,3 @@ def golden(f: Callable, bracket: Tuple[float, float, float], xtol=1e-6, maxiter=
     
     r = (a + c) / 2
     return r, nit, nfev
-
