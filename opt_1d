@@ -4,13 +4,6 @@ from typing import Callable, Tuple
 
 class IterationError(Exception):
     """
-    Excepción personalizada para indicar que se ha excedido el número máximo de iteraciones permitidas.
-
-    Esta excepción se utiliza para manejar situaciones en las que un algoritmo o función ha alcanzado
-    un número máximo de iteraciones, normalmente el parámetro 'maxiter = 100' sin encontrar un resultado deseado.
-
-    Attributes:
-        message (str): Mensaje descriptivo de la excepción.
     """
 
     pass
