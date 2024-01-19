@@ -9,7 +9,6 @@ class IterationError(Exception):
     This exception is used to handle situations where an algorithm or function has reached
     a maximum number of iterations, typically the parameter 'maxiter = 100', without finding the desired result.
     """
-
     pass
 
 def root_bracket(f: Callable, a: float, b: float, delta=.1)-> Tuple[float,float]:
