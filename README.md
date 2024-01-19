@@ -34,14 +34,34 @@ The implemented algorithms include:
 ### Usage
 ```python
 import numpy as np
-from opt_1d import *
+import matplotlib.pyplot as plt
+from opt_1d import bisection
 
 # Define a function
-def f(x):
-    return x**2 - 4
+def x_sin_exp(x):
+ return 0.5 + -(x + np.sin(x)) * np.exp(-x**2.0)
 
 # Example of using the bisection method in the function
-a, b = root_bracket(f, -3, 3)
+a,b, = -3,3 #Choose the interval
+
+# 1: Graph the function to make sure in [a,b] there's only one root
+x_data = np.linspace(-3,3, 1000)
+y_data = 0.5 -(x_data + np.sin(x_data)) * np.exp(-x_data**2.0)
+plt.figure(figsize=(10,6))
+plt.title('$f(x) = 0.5 -(x + sin(x))e^{-x^2}$')
+plt.xlabel("Eje X")
+plt.ylabel("Eje Y")
+plt.xticks(np.linspace(-3,3,20),rotation = 45)
+plt.plot(x_data, y_data, label ='$f(x)$')
+plt.plot(0.2706456263003202, 0, marker = 'x', label = '$x_1$' )
+plt.plot(1.2057799467154835 , 0, marker = 'x', label = '$x_2$' )
+plt.grid()
+plt.axhline(color='black')
+plt.legend()
+plt.show()
+
+#2. Use the method:
+a,b = 0.16,0.5 # Interval with only one root
 root, iterations = bisection(f, a, b)
 print(f"Root found: {root} after {iterations} iterations.")
 ```
