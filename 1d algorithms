@@ -1,0 +1,317 @@
+import numpy as np
+from typing import Callable, Tuple
+
+
+class IterationError(Exception):
+    """
+    Excepción personalizada para indicar que se ha excedido el número máximo de iteraciones permitidas.
+
+    Esta excepción se utiliza para manejar situaciones en las que un algoritmo o función ha alcanzado
+    un número máximo de iteraciones, normalmente el parámetro 'maxiter = 100' sin encontrar un resultado deseado.
+
+    Attributes:
+        message (str): Mensaje descriptivo de la excepción.
+    """
+
+    pass
+
+def root_bracket(f: Callable, a: float, b: float, delta=1.)-> Tuple:
+    """
+    Encuentra un intervalo [a, x] donde la función f cambia de signo, lo que implica que se encuentra al menos
+    una raíz de la función f pasada como argumento.
+
+    Args:
+        f (Callable): La función cuya raíz se desea encontrar.
+        a (float): El punto inicial del intervalo.
+        b (float): El punto final del intervalo.
+        delta (float): El paso para explorar el intervalo. Por defecto será 1.
+
+    Returns:
+        Tuple: Una tupla que contiene los extremos del intervalo [a, x] donde f cambia de signo.
+        Si no se encuentra tal intervalo, se devuelve (-∞, ∞).
+    """
+    x = a + delta
+    while x < b:
+        if f(a)*f(x) < 0:
+            return a,x
+        else:
+            x += delta
+    return -np.inf, np.inf 
+
+
+def bisection(f: Callable, a: float, b: float, tol=0.001, maxiter=100)-> Tuple[float, int]:
+    """
+    Halla las raíces de una función utilizando el método de la bisección.
+
+    Args:
+        f (Callable): La función cuya raíz se desea encontrar.
+        a (float): El punto inicial del intervalo.
+        b (float): El punto final del intervalo.
+        tol (float): La tolerancia. Por defecto la ponemos en 0.001.
+        maxiter (int): El número máximo de iteraciones. Por defecto lo ajustamos a 100.
+
+    Returns:
+        Tuple: Una tupla que contiene la raíz aproximada y el número de iteraciones realizadas.
+                  
+    Raises:
+        IterationError: Se lanza una excepción si se sobrepasa el número máximo de iteraciones.
+        ValueError: No existe raiz en el intervalo dado.
+    """
+    if f(a) * f(b) > 0:
+        raise ValueError('No existe raiz en el intervalo dado')
+    
+    nit = 0
+
+    while nit <= maxiter: 
+        nit += 1           
+        c = (a + b) / 2 # Punto medio
+
+        if abs(f(c)) <= tol:
+            return c, nit
+        
+        elif f(a) * f(c) < 0:
+            b = c
+
+        else:
+            a = c
+
+    raise IterationError("El número máximo de iteraciones permitidas ha sido excedido.")
+
+
+def regula_falsi(f: Callable, a: float, b: float, tol=0.001, maxiter=100) -> Tuple[float, int]:
+    """
+    Halla las raíces de una función utilizando el método de la falsa posición.
+
+    Args:
+        f (Callable): La función cuya raíz se desea encontrar.
+        a (float): El punto inicial del intervalo.
+        b (float): El punto final del intervalo.
+        tol (float): La tolerancia. Por defecto la ponemos en 0.001.
+        maxiter (int): El número máximo de iteraciones. Por defecto lo ajustamos a 100.
+
+    Returns:
+        Tuple: Una tupla que contiene la raíz aproximada y el número de iteraciones realizadas.
+                  
+    Raises:
+        IterationError: Se lanza una excepción si se sobrepasa el número máximo de iteraciones.
+        ValueError: No existe raiz en el intervalo dado.
+    """
+    if f(b) * f(a) > 0:
+        raise ValueError('No existe raiz en el intervalo dado')
+    
+    nit = 0
+
+    while nit <= maxiter:
+        nit += 1
+        fa = f(a)
+        fb = f(b)
+        c = (a * fb - b * fa) / (fb - fa) # Paso clave
+        
+        if abs(f(c)) <= tol:
+            return c, nit
+        
+        if f(c) < 0:
+            a = c
+        else:
+            b = c
+    
+    raise IterationError("El número máximo de iteraciones permitidas ha sido excedido.")
+
+def secant(f: Callable, a: float, b: float, tol=0.001, maxiter=100)-> Tuple[float, int]:
+    """
+    Halla las raíces de una función utilizando el método de la secante.
+
+    Args:
+        f (Callable): La función cuya raíz se desea encontrar.
+        a (float): El punto inicial del intervalo.
+        b (float): El punto final del intervalo.
+        tol (float): La tolerancia. Por defecto la ponemos en 0.001.
+        maxiter (int): El número máximo de iteraciones. Por defecto lo ajustamos a 100.
+
+    Returns:
+        Tuple: Una tupla que contiene la raíz aproximada y el número de iteraciones realizadas.
+                  
+    Raises:
+        IterationError: Se lanza una excepción si se sobrepasa el número máximo de iteraciones.
+        ValueError: No existe raiz en el intervalo dado.
+    """
+    if f(b) * f(a) > 0:
+        raise ValueError('No existe raiz en el intervalo dado')
+    
+    nit = 0
+    
+    while nit <= maxiter:
+        nit += 1
+        fa = f(a)
+        fb = f(b)        
+        x_next = b - (fb * (b - a)) / (fb - fa) # Paso clave
+        
+        if abs(f(x_next)) <= tol:
+            return x_next, nit
+        
+        a = b
+        b = x_next
+    raise IterationError("El número máximo de iteraciones permitidas ha sido excedido.")
+
+
+def min_bracket(f: Callable, a: float, b: float, delta=1.0) -> Tuple[float, float, float, int]:
+    """Recibe una funcion f, dos floats a, b y un paso delta y devuelve una tupla x0, x1, x2, 
+    nfev con tres floats que definan un bracket de f y un entero con el número de evaluaciones 
+    de f efectuadas
+
+    Args:
+        f (Callable): función en la que buscar el bracket
+        a (float): primer float del intervalo
+        b (float): segundo float del intervalo
+        delta (optional): paso para operar. Defaults to 1.0.
+
+    Raises:
+        ValueError: a no puede ser mayor que b
+
+    Returns:
+        Tuple[float, float, float, int]: devuelve el braket (x0,x1,x2) y el número de evaluaciones (nfev) de la función
+    """
+
+    i = a
+    j = b
+
+    if a > b:
+        raise ValueError('a no puede ser mayor que b')
+    
+    nfev = 0
+    
+    if f(a) < f(b):
+        x0 = a
+        x1 = a + delta
+        while f(x1) < f(x0):
+            x0 = x1
+            x1 += delta
+            nfev += 1
+            if x1 >= b:
+                return -np.inf, np.inf # No se encontró el bracket
+    
+    #f(a) > f(b)
+    else:
+        x0 = b
+        x1 = b - delta
+        while f(x1) < f(x0):
+            x0 = x1
+            x1 -= delta
+            nfev += 1
+            if x1 <= a:
+                return -np.inf, np.inf # No se encontró el bracket
+            
+    if nfev == 0:
+        return -np.inf, np.inf
+    
+ 
+    return i, x0, j, nfev
+
+
+
+
+def trisection(f: Callable, bracket: Tuple[float, float, float], xtol=0.001, maxiter=100) -> Tuple[float, int, int]:
+    """Recibe una funcion f, una tupla bracket que define un bracket de f y, a partir de dicho bracket, devuelve una tupla
+    r, nit, nfev con un minimo aproximado r y el numeros de iteraciones y de evaluaciones de f necesarias para encontrarlo 
+    mediante el método de triseccion
+
+    Args:
+        f (Callable): función que evaluar
+        bracket (Tuple[float, float, float]): bracket sobre el que buscar el mínimo
+        xtol (float, optional): margen de error mínimo. Defaults to 0.001.
+        maxiter (int, optional): número de iteraciones máximas del algoritmo. Defaults to 100.
+
+    Raises:
+        IterationError: hemos superado el número maximo de iteraciones
+        ValueError: el bracket no cumple las condiciones de orden
+
+    Returns:
+        Tuple[float, int, int]: tupla con la raiz, en numero de iteraciones y el numero de evaluaciones de 
+        la funcion
+    """
+    a, b, c = bracket
+    if not (a < b < c) and not (f(a) > f(b) and  f(b) < f(c)):
+        raise ValueError('Incorrect bracket')
+
+    
+    nit = 0  # Número de iteraciones
+    nfev = 0  # Número de evaluaciones de la función
+    
+    while abs(c - a) > xtol and nit <= maxiter:
+        nit += 1
+        nfev += 2  # Evaluamos la función en dos nuevos puntos
+        
+        # Calculamos los puntos intermedios
+        x1 = a + (c - a) / 3
+        x2 = c - (c - a) / 3
+       
+        f1 = f(x1)
+        f2 = f(x2)
+     
+        if f1 < f2:
+            c = x2
+        else:
+            a = x1
+    
+    if nit > maxiter:
+        raise IterationError("El número máximo de iteraciones permitidas ha sido excedido.")
+    
+    r = (a + c) / 2
+    return r, nit, nfev
+
+
+def golden(f: Callable, bracket: Tuple[float, float, float], xtol=0.001, maxiter=100) -> Tuple[float, int, int]:
+    """Recibe una funcion f, una tupla bracket que define un bracket de f y, a partir de dicho bracket, devuelva una tupla
+    r, nit, nfev con un minimo aproximado r y los numeros de iteraciones y de evaluaciones de f necesarias para encontrarlo 
+    mediante el metodo de la razon  ́aurea.
+
+    Args:
+        f (Callable): función que evaluar
+        bracket (Tuple[float, float, float]): bracket sobre el que buscar el mínimo
+        xtol (float, optional): margen de error mínimo. Defaults to 0.001.
+        maxiter (int, optional): número de iteraciones máximas del algoritmo. Defaults to 100.
+
+    Raises:
+        IterationError: hemos superado el número maximo de iteraciones
+        ValueError: el bracket no cumple las condiciones de orden
+
+    Returns:
+        Tuple[float, int, int]: tupla con la raiz, en numero de iteraciones y el numero de evaluaciones de 
+        la funcion
+    """
+    a, b, c = bracket
+    if not (a < b < c) and not (f(a) > f(b) and  f(b) < f(c)):
+        raise ValueError('Incorrect bracket')
+    
+    nit = 0  # Número de iteraciones
+    nfev = 2  # Número de evaluaciones de la función
+    ra = 0.618033988749894 #1/phi
+    x2 = a + (c - a) * ra
+    x1 = c - (c - a) * ra
+    f1 = f(x1)
+    f2 = f(x2)
+    
+    while abs(c - a) > xtol and nit <= maxiter:
+        nit += 1
+        nfev += 1  
+
+        # Calculamos los puntos intermedios. Nos ahorramos evaluaciones!
+        if f1 < f2:
+            c = x2  
+            x2 = x1
+            x1 = c - (c - a) * ra
+            f2 = f1
+            f1 = f(x1)
+        else:
+            a = x1
+            x1 = x2
+            x2 = a + (c - a) * ra
+            f1 = f2
+            f2 = f(x2)
+
+    if nit > maxiter:
+        raise IterationError("El número máximo de iteraciones permitidas ha sido excedido.")
+    
+    r = (a + c) / 2
+    return r, nit, nfev
+
