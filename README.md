@@ -1,6 +1,11 @@
 # 1D Algorithms in Python
 
-This code file contains Python implementations of algorithms for finding roots and minima of one-dimensional functions. The implemented algorithms include:
+This code file contains basic Python implementations of algorithms for finding roots and minima of one-dimensional functions.
+**Note:** It uses the NumPy library so make sure you have it  installed before running the code:
+```bash
+pip install numpy
+```
+The implemented algorithms include:
 
 1. **Bisection Method:**
    - Function `bisection(f, a, b, tol=0.001, maxiter=100)`.
@@ -31,11 +36,11 @@ This code file contains Python implementations of algorithms for finding roots a
 import numpy as np
 from algorithms_1d import *
 
-# Define the function
+# Define a function
 def f(x):
     return x**2 - 4
 
-# Example of using the bisection method
+# Example of using the bisection method in the function
 a, b = root_bracket(f, -3, 3)
 root, iterations = bisection(f, a, b)
 print(f"Root found: {root} after {iterations} iterations.")
@@ -44,9 +49,3 @@ print(f"Root found: {root} after {iterations} iterations.")
 ### Exceptions
 - `IterationError`: Raised if the maximum number of iterations is exceeded.
 - `ValueError`: Raised if no root is found in the given interval.
-
-**Note:** Make sure to have the NumPy library installed before running the code:
-
-```bash
-pip install numpy
-```
