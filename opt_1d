@@ -1,27 +1,37 @@
-import numpy as np
 from typing import Callable, Tuple
+import numpy as np
 
 
 class IterationError(Exception):
     """
+    Custom exception to indicate that the maximum number of iterations allowed has been exceeded.
+
+    This exception is used to handle situations where an algorithm or function has reached
+    a maximum number of iterations, typically the parameter 'maxiter = 100', without finding the desired result.
     """
 
     pass
 
-def root_bracket(f: Callable, a: float, b: float, delta=1.)-> Tuple:
+def root_bracket(f: Callable, a: float, b: float, delta=.1)-> Tuple[float,float]:
     """
-    Encuentra un intervalo [a, x] donde la función f cambia de signo, lo que implica que se encuentra al menos
-    una raíz de la función f pasada como argumento.
+    Finds an interval [a, x] where the function f changes sign, implying that at least
+    one root of the function f passed as an argument is present.
 
-    Args:
-        f (Callable): La función cuya raíz se desea encontrar.
-        a (float): El punto inicial del intervalo.
-        b (float): El punto final del intervalo.
-        delta (float): El paso para explorar el intervalo. Por defecto será 1.
+    Parameters:
+    -----------
+        - `f` (Callable): The function whose root is to be found.
+        - `a` (float): The initial point of the interval.
+        - `b` (float): The final point of the interval.
+        - `delta` (float): The step to explore the interval. Defaults to .1.
 
     Returns:
-        Tuple: Una tupla que contiene los extremos del intervalo [a, x] donde f cambia de signo.
-        Si no se encuentra tal intervalo, se devuelve (-∞, ∞).
+    --------
+        `Tuple[float,float]`: A tuple containing the endpoints of the interval [a, x] where f changes sign.
+        If no such interval is found, the interval (-∞, ∞) is returned.
+
+    Raises:
+    -------
+        `ValueError`: Raised if no root is found in the given interval.
     """
     x = a + delta
     while x < b:
@@ -29,29 +39,32 @@ def root_bracket(f: Callable, a: float, b: float, delta=1.)-> Tuple:
             return a,x
         else:
             x += delta
-    return -np.inf, np.inf 
+    raise ValueError('No root exists in the given interval')
 
 
-def bisection(f: Callable, a: float, b: float, tol=0.001, maxiter=100)-> Tuple[float, int]:
+def bisection(f: Callable, a: float, b: float, tol=1e-6, maxiter=100)-> Tuple[float, int]:
     """
-    Halla las raíces de una función utilizando el método de la bisección.
+    Finds the roots of a function using the bisection method.
 
-    Args:
-        f (Callable): La función cuya raíz se desea encontrar.
-        a (float): El punto inicial del intervalo.
-        b (float): El punto final del intervalo.
-        tol (float): La tolerancia. Por defecto la ponemos en 0.001.
-        maxiter (int): El número máximo de iteraciones. Por defecto lo ajustamos a 100.
+    Parameters:
+    -----------
+        - `f` (Callable): The function whose root is to be found.
+        - `a` (float): The initial point of the interval.
+        - `b` (float): The final point of the interval.
+        - `tol` (float): Tolerance. Defaults to 1e-6.
+        - `maxiter` (int): The maximum number of iterations. Defaults to 100.
 
     Returns:
-        Tuple: Una tupla que contiene la raíz aproximada y el número de iteraciones realizadas.
-                  
+    --------
+        - `Tuple[float, int]`: A tuple containing the approximate root and the number of iterations performed.
+
     Raises:
-        IterationError: Se lanza una excepción si se sobrepasa el número máximo de iteraciones.
-        ValueError: No existe raiz en el intervalo dado.
+    -------
+        - `IterationError`: Raised if the maximum number of iterations is exceeded.
+        - `ValueError`: Raised if no root is found in the given interval.
     """
     if f(a) * f(b) > 0:
-        raise ValueError('No existe raiz en el intervalo dado')
+        raise ValueError('No root exists in the given interval')
     
     nit = 0
 
@@ -68,26 +81,29 @@ def bisection(f: Callable, a: float, b: float, tol=0.001, maxiter=100)-> Tuple[f
         else:
             a = c
 
-    raise IterationError("El número máximo de iteraciones permitidas ha sido excedido.")
+    raise IterationError('The maximum number of allowed iterations has been exceeded.')
 
 
-def regula_falsi(f: Callable, a: float, b: float, tol=0.001, maxiter=100) -> Tuple[float, int]:
+def regula_falsi(f: Callable, a: float, b: float, tol=1e-6, maxiter=100) -> Tuple[float, int]:
     """
-    Halla las raíces de una función utilizando el método de la falsa posición.
+    Finds the roots of a function using the false position method.
 
-    Args:
-        f (Callable): La función cuya raíz se desea encontrar.
-        a (float): El punto inicial del intervalo.
-        b (float): El punto final del intervalo.
-        tol (float): La tolerancia. Por defecto la ponemos en 0.001.
-        maxiter (int): El número máximo de iteraciones. Por defecto lo ajustamos a 100.
+    Parameters:
+    -----------
+        - `f` (Callable): The function whose root is to be found.
+        - `a` (float): The initial point of the interval.
+        - `b` (float): The final point of the interval.
+        - `tol` (float): Tolerance. Defaults to 1e-6.
+        - `maxiter` (int): The maximum number of iterations. Defaults to 100.
 
     Returns:
-        Tuple: Una tupla que contiene la raíz aproximada y el número de iteraciones realizadas.
+    --------
+        `Tuple[float,int]`: A tuple containing the approximate root and the number of iterations performed.
                   
     Raises:
-        IterationError: Se lanza una excepción si se sobrepasa el número máximo de iteraciones.
-        ValueError: No existe raiz en el intervalo dado.
+    -------
+        - `IterationError`: Raised if the maximum number of iterations is exceeded.
+        - `ValueError`: No root exists in the given interval.
     """
     if f(b) * f(a) > 0:
         raise ValueError('No existe raiz en el intervalo dado')
@@ -110,23 +126,26 @@ def regula_falsi(f: Callable, a: float, b: float, tol=0.001, maxiter=100) -> Tup
     
     raise IterationError("El número máximo de iteraciones permitidas ha sido excedido.")
 
-def secant(f: Callable, a: float, b: float, tol=0.001, maxiter=100)-> Tuple[float, int]:
+def secant(f: Callable, a: float, b: float, tol=1e-6, maxiter=100)-> Tuple[float, int]:
     """
-    Halla las raíces de una función utilizando el método de la secante.
+    Finds the roots of a function using the secant method.
 
-    Args:
-        f (Callable): La función cuya raíz se desea encontrar.
-        a (float): El punto inicial del intervalo.
-        b (float): El punto final del intervalo.
-        tol (float): La tolerancia. Por defecto la ponemos en 0.001.
-        maxiter (int): El número máximo de iteraciones. Por defecto lo ajustamos a 100.
+    Parameters:
+    -----------
+        - `f` (Callable): The function whose root is to be found.
+        - `a` (float): The initial point of the interval.
+        - `b` (float): The final point of the interval.
+        - `tol` (float): Tolerance. Defaults to 1e-6.
+        - `maxiter` (int): The maximum number of iterations. Defaults to 100.
 
     Returns:
-        Tuple: Una tupla que contiene la raíz aproximada y el número de iteraciones realizadas.
+    --------
+        `Tuple[float,int]`: A tuple containing the approximate root and the number of iterations performed.
                   
     Raises:
-        IterationError: Se lanza una excepción si se sobrepasa el número máximo de iteraciones.
-        ValueError: No existe raiz en el intervalo dado.
+    -------
+        - `IterationError`: Raised if the maximum number of iterations is exceeded.
+        - `ValueError`: No root exists in the given interval.
     """
     if f(b) * f(a) > 0:
         raise ValueError('No existe raiz en el intervalo dado')
@@ -147,22 +166,25 @@ def secant(f: Callable, a: float, b: float, tol=0.001, maxiter=100)-> Tuple[floa
     raise IterationError("El número máximo de iteraciones permitidas ha sido excedido.")
 
 
-def min_bracket(f: Callable, a: float, b: float, delta=1.0) -> Tuple[float, float, float, int]:
-    """Recibe una funcion f, dos floats a, b y un paso delta y devuelve una tupla x0, x1, x2, 
-    nfev con tres floats que definan un bracket de f y un entero con el número de evaluaciones 
-    de f efectuadas
+def min_bracket(f: Callable, a: float, b: float, delta=.1) -> Tuple[float, float, float, int]:
+    """Receives a function f, two floats a, b, and a step delta, and returns a tuple x0, x1, x2,
+    nfev with three floats defining a bracket of f and an integer with the number of function evaluations
+    performed.
 
-    Args:
-        f (Callable): función en la que buscar el bracket
-        a (float): primer float del intervalo
-        b (float): segundo float del intervalo
-        delta (optional): paso para operar. Defaults to 1.0.
+    Parameters:
+    -----------
+        - `f` (Callable): Function to search for the bracket.
+        - `a` (float): First float of the interval.
+        - `b` (float): Second float of the interval.
+        - `delta` (float): Step for the operation. Defaults to 0.1.
 
     Raises:
-        ValueError: a no puede ser mayor que b
+    -------
+        `ValueError`: a cannot be greater than b.
 
     Returns:
-        Tuple[float, float, float, int]: devuelve el braket (x0,x1,x2) y el número de evaluaciones (nfev) de la función
+    --------
+        `Tuple[float, float, float, int]`: Returns the bracket (x0, x1, x2) and the number of function evaluations (nfev).
     """
 
     i = a
@@ -203,24 +225,27 @@ def min_bracket(f: Callable, a: float, b: float, delta=1.0) -> Tuple[float, floa
 
 
 
-def trisection(f: Callable, bracket: Tuple[float, float, float], xtol=0.001, maxiter=100) -> Tuple[float, int, int]:
-    """Recibe una funcion f, una tupla bracket que define un bracket de f y, a partir de dicho bracket, devuelve una tupla
-    r, nit, nfev con un minimo aproximado r y el numeros de iteraciones y de evaluaciones de f necesarias para encontrarlo 
-    mediante el método de triseccion
+def trisection(f: Callable, bracket: Tuple[float, float, float], xtol=1e-6, maxiter=100) -> Tuple[float, int, int]:
+   """
+    Receives a function f, a tuple bracket defining a bracket of f, and, starting from that bracket, returns a tuple
+    r, nit, nfev with an approximate minimum r and the numbers of iterations and function evaluations needed to find it
+    using the trisection method.
 
-    Args:
-        f (Callable): función que evaluar
-        bracket (Tuple[float, float, float]): bracket sobre el que buscar el mínimo
-        xtol (float, optional): margen de error mínimo. Defaults to 0.001.
-        maxiter (int, optional): número de iteraciones máximas del algoritmo. Defaults to 100.
+    Parameters:
+    -----------
+        - `f` (Callable): Function to evaluate.
+        - `bracket` (Tuple[float, float, float]): Bracket to search for the minimum.
+        - `xtol` (float, optional): Minimum error margin. Defaults to 1e-6.
+        - `maxiter` (int, optional): Maximum number of algorithm iterations. Defaults to 100.
 
     Raises:
-        IterationError: hemos superado el número maximo de iteraciones
-        ValueError: el bracket no cumple las condiciones de orden
+    -------
+        - `IterationError`: Exceeded the maximum number of iterations.
+        - `ValueError`: The bracket does not meet the order conditions.
 
     Returns:
-        Tuple[float, int, int]: tupla con la raiz, en numero de iteraciones y el numero de evaluaciones de 
-        la funcion
+    --------
+        `Tuple[float, int, int]`: Tuple with the root, the number of iterations, and the number of function evaluations.
     """
     a, b, c = bracket
     if not (a < b < c) and not (f(a) > f(b) and  f(b) < f(c)):
@@ -253,32 +278,35 @@ def trisection(f: Callable, bracket: Tuple[float, float, float], xtol=0.001, max
     return r, nit, nfev
 
 
-def golden(f: Callable, bracket: Tuple[float, float, float], xtol=0.001, maxiter=100) -> Tuple[float, int, int]:
-    """Recibe una funcion f, una tupla bracket que define un bracket de f y, a partir de dicho bracket, devuelva una tupla
-    r, nit, nfev con un minimo aproximado r y los numeros de iteraciones y de evaluaciones de f necesarias para encontrarlo 
-    mediante el metodo de la razon  ́aurea.
+def golden(f: Callable, bracket: Tuple[float, float, float], xtol=1e-6, maxiter=100) -> Tuple[float, int, int]:
+    """
+    Receives a function f, a tuple bracket defining a bracket of f, and starting from that bracket, returns a tuple
+    r, nit, nfev with an approximate minimum r and the numbers of iterations and function evaluations needed to find it 
+    using the golden ratio method.
 
-    Args:
-        f (Callable): función que evaluar
-        bracket (Tuple[float, float, float]): bracket sobre el que buscar el mínimo
-        xtol (float, optional): margen de error mínimo. Defaults to 0.001.
-        maxiter (int, optional): número de iteraciones máximas del algoritmo. Defaults to 100.
+    Parameters:
+    -----------
+        - `f` (Callable): Function to evaluate.
+        - `bracket` (Tuple[float, float, float]): Bracket on which to search for the minimum.
+        - `xtol` (float, optional): Minimum error margin. Defaults to 1e-6.
+        - `maxiter` (int, optional): Maximum number of algorithm iterations. Defaults to 100.
 
     Raises:
-        IterationError: hemos superado el número maximo de iteraciones
-        ValueError: el bracket no cumple las condiciones de orden
+    -------
+        - `IterationError`: Exceeded the maximum number of iterations.
+        - `ValueError`: The bracket does not meet the order conditions.
 
     Returns:
-        Tuple[float, int, int]: tupla con la raiz, en numero de iteraciones y el numero de evaluaciones de 
-        la funcion
+    --------
+        `Tuple[float, int, int]`: Tuple with the root, the number of iterations, and the number of function evaluations.
     """
     a, b, c = bracket
     if not (a < b < c) and not (f(a) > f(b) and  f(b) < f(c)):
         raise ValueError('Incorrect bracket')
     
-    nit = 0  # Número de iteraciones
-    nfev = 2  # Número de evaluaciones de la función
-    ra = 0.618033988749894 #1/phi
+    nit = 0
+    nfev = 2
+    ra = 0.618033988749894
     x2 = a + (c - a) * ra
     x1 = c - (c - a) * ra
     f1 = f(x1)
@@ -288,7 +316,6 @@ def golden(f: Callable, bracket: Tuple[float, float, float], xtol=0.001, maxiter
         nit += 1
         nfev += 1  
 
-        # Calculamos los puntos intermedios. Nos ahorramos evaluaciones!
         if f1 < f2:
             c = x2  
             x2 = x1
@@ -303,7 +330,7 @@ def golden(f: Callable, bracket: Tuple[float, float, float], xtol=0.001, maxiter
             f2 = f(x2)
 
     if nit > maxiter:
-        raise IterationError("El número máximo de iteraciones permitidas ha sido excedido.")
+        raise IterationError('The maximum number of allowed iterations has been exceeded.')
     
     r = (a + c) / 2
     return r, nit, nfev
