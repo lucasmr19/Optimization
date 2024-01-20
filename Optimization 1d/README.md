@@ -9,9 +9,9 @@ The implemented algorithms include:
 
 1. **Bisection Method:** Finds a root of the function $f$ within the interval $[a, b]$ using the bisection method.
 
-2. **False Position Method:** Finds a root of the function $f$ within the interval \([a, b]\) using the false position method.
+2. **False Position Method:** Finds a root of the function $f$ within the interval $[a, b]$ using the false position method.
 
-3. **Secant Method:** Finds a root of the function $f$ within the interval \([a, b]\) using the secant method.
+3. **Secant Method:** Finds a root of the function $f$ within the interval $[a, b]$ using the secant method.
 
 4. **Trisection Method:** Finds a minimum of the function $f$ within the given bracket using the trisection method.
 
