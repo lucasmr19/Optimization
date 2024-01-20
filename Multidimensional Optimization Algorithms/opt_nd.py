@@ -257,6 +257,215 @@ def nesterov_grad_nd(x: np.array, f: Callable, df: Callable, tol: float = 1e-6, 
     return x, points, nit, nfev
 
 
+def _UpdateD(D: np.ndarray, gf: Callable, y: np.ndarray, ly: np.ndarray, tol:float) -> np.ndarray:
+        """
+        Update the inverse Hessian matrix approximation (D) in the DFP algorithms.
+
+        Parameters:
+        -----------
+            - `D` (np.ndarray): Current inverse Hessian matrix approximation.
+            - `gf` (Callable): Gradient (first-order derivative) of the objective function.
+            - `y` (np.ndarray): Current point in the optimization process.
+            - `ly` (np.ndarray): Previous point in the optimization process.
+            - `tol` (float): Tolerance for numerical stability.
+
+        Returns:
+        --------
+            `np.ndarray`: Updated inverse Hessian matrix approximation.
+        """
+        p = ly - y
+        q = gf(ly) - gf(y)
+
+        p_trans = p.T
+        q_trans = q.T
+        return D + np.outer(p, p_trans) / (np.dot(p_trans, q) + tol) - np.outer(np.dot(D, q), np.dot(q_trans, D)) / (np.dot(np.dot(q_trans, D), q) + tol)
+
+
+def dfp(x: np.array, f: Callable, gf: Callable, lr = 0.01, maxiter=100, tol=0.001) -> Tuple[np.ndarray, List[np.array], int]:
+    """
+    Minimize a scalar function of one or more variables using the `DFP` (Davidon-Fletcher-Powell) method.
+    This method approximates the inverse Hessian matrix (similar to `newton`method) and updates it in each iteration.
+
+    Parameters:
+    -----------
+        - `x` (np.array): Initial guess for the minimum point.
+        - `f` (Callable): Objective function to be minimized.
+        - `gf` (Callable): Gradient (first-order derivative) of the objective function.
+        - `lr` (float, optional):  Learning rate or step size for each iteration. Default is 0.01.
+        - `maxiter` (int, optional): Maximum number of iterations. Default is 100.
+        - `tol` (float, optional): Tolerance to declare convergence. Default is 0.001.
+
+    Returns:
+    --------
+    - `Tuple[np.ndarray, List[np.array], int]`
+        - `x` (np.ndarray): The point where the algorithm stopped.
+        - `points` (List[np.array]): List of points visited during optimization.
+        - `nit` (int): Number of iterations performed.
+    """
+    points = []
+    nit = 0
+    gradient = gf(x)
+    n = len(x)
+
+    while nit < maxiter and np.linalg.norm(gradient) > tol:
+        y = x
+        D = np.identity(n)
+
+        for _ in range(n):
+            direction = - np.dot(D, gf(y))
+            ly = y
+            y = y + lr * direction
+            D = _UpdateD(D,gf,y,ly,tol)
+
+        x = y
+        gradient = gf(x)
+        points.append(x)
+        nit += 1
+    return x, points, nit
+
+
+def dfp_ls(x: np.array, f: Callable, gf: Callable, maxiter=100, tol=0.001, method='brent') -> Tuple[np.ndarray, List[np.array], int]:
+    """
+    Minimize a scalar function of one or more variables using the `DFP` (Davidon-Fletcher-Powell) method and using linear search
+    to found the new `lr` value in each iteration.
+
+   This method approximates the inverse Hessian matrix (similar to `newton`method) and updates it in each iteration.
+
+    Parameters:
+    -----------
+        - `x` (np.array): Initial guess for the minimum point.
+        - `f` (Callable): Objective function to be minimized.
+        - `gf` (Callable): Gradient (first-order derivative) of the objective function.
+        - `lr` (float, optional):  Learning rate or step size for each iteration. Default is 0.01.
+        - `maxiter` (int, optional): Maximum number of iterations. Default is 100.
+        - `tol` (float, optional): Tolerance to declare convergence. Default is 0.001.
+
+    Returns:
+    --------
+    - `Tuple[np.ndarray, List[np.array], int]`
+        - `x` (np.ndarray): The point where the algorithm stopped.
+        - `points` (List[np.array]): List of points visited during optimization.
+        - `nit` (int): Number of iterations performed.
+    """
+    points = []
+    nit = 0
+    gradient = gf(x)
+    n = len(x)
+
+    while nit < maxiter and np.linalg.norm(gradient) > tol:
+        y = x
+        D = np.identity(n)
+
+        for _ in range(n):
+            direction = -np.dot(D, gf(y))
+            f_1d = f_md(f, y, -direction)
+
+            res = minimize_scalar(f_1d, method=method)
+            lr_opt = res.x
+
+            ly = y
+            y = y + lr_opt * direction
+            D = UpdateD(D,gf,y,ly,tol)
+        x = y
+        gradient = gf(x)
+        points.append(x)
+        nit += 1
+    return x, points, nit
+
+
+def fr(x: np.array, f: Callable, gf: Callable, lr = 0.01, maxiter=100, tol=0.001) -> Tuple[np.ndarray, List[np.array], int]:
+    """
+    Minimize a scalar function of one or more variables using the FR (Fletcher-Reeves) method.
+
+    Parameters:
+    -----------
+        - `x` (np.array): Initial guess for the minimum point.
+        - `f` (Callable): Objective function to be minimized.
+        - `gf` (Callable): Gradient (first-order derivative) of the objective function.
+        - `lr` (float, optional):  Learning rate or step size for each iteration. Default is 0.01.
+        - `maxiter` (int, optional): Maximum number of iterations. Default is 100.
+        - `tol` (float, optional): Tolerance to declare convergence. Default is 0.001.
+
+    Returns:
+    --------
+    - `Tuple[np.ndarray, List[np.array], int]`
+        - `x` (np.ndarray): The point where the algorithm stopped.
+        - `points` (List[np.array]): List of points visited during optimization.
+        - `nit` (int): Number of iterations performed.
+    """
+    points = []
+    nit = 0
+    n = len(x)
+    gradient = gf(x)
+
+    
+    while nit < maxiter and np.linalg.norm(gradient) > tol:
+        y = x
+        direction = - gradient
+        for _ in range(n):
+            ly = y
+            y = y + lr * direction
+            
+            gy = gf(y)
+            a = (np.linalg.norm(gy)**2)/(np.linalg.norm(gf(ly))**2)
+            direction = - gy + a * direction
+            
+        x = y
+        gradient = gf(x)
+        points.append(x)
+        nit += 1
+    return x, points, nit
+
+
+def fr_ls(x: np.array, f: Callable, gf: Callable, maxiter=100, tol=0.001, method='brent') -> Tuple[np.ndarray, List[np.array], int]:
+    """
+    Minimize a scalar function of one or more variables using the FR (Fletcher-Reeves) method and using linear search
+    to found the new `lr` value in each iteration.
+
+    Parameters:
+    -----------
+        - `x` (np.array): Initial guess for the minimum point.
+        - `f` (Callable): Objective function to be minimized.
+        - `gf` (Callable): Gradient (first-order derivative) of the objective function.
+        - `lr` (float, optional):  Learning rate or step size for each iteration. Default is 0.01.
+        - `maxiter` (int, optional): Maximum number of iterations. Default is 100.
+        - `tol` (float, optional): Tolerance to declare convergence. Default is 0.001.
+
+    Returns:
+    --------
+    - `Tuple[np.ndarray, List[np.array], int]`
+        - `x` (np.ndarray): The point where the algorithm stopped.
+        - `points` (List[np.array]): List of points visited during optimization.
+        - `nit` (int): Number of iterations performed.
+    """
+    points = []
+    nit = 0
+    n = len(x)
+    gradient = gf(x)
+
+    while nit < maxiter and np.linalg.norm(gradient) > tol:
+        y = x
+        direction = -gradient
+        for _ in range(n):
+            f_1d = f_md(f, y, -direction)
+
+            res = minimize_scalar(f_1d, method=method)
+            lr_opt = res.x
+
+            ly = y
+            y = y + lr_opt * direction
+  
+            gy = gf(y)
+            a = np.linalg.norm(gy)**2/np.linalg.norm(gf(ly) + tol)**2 # Sumamos tol para evitar divisiones entre 0
+            direction = - gy + a * direction
+
+        x = y
+        gradient = gf(x)
+        points.append(x)
+        nit += 1
+    return x, points, nit
+
+
 def f_rosen_md(z: np.ndarray, a=1, b=100) -> float:
     """
     Calcula la función (no convexa) de Rosenbrock multidimensional.
