@@ -1,3 +1,17 @@
+"""
+This module implements basic Python optimization algorithms for finding minima of N-dimensional functions,
+including gradient descent, Newton's method, etc. and their variations with linear search.
+
+Author: 
+%  ___                                                       _     __      
+% /\_ \                                                    /' \  /'_ `\    
+% \//\ \   __  __   ___     __      ____   ___ ___   _ __ /\_, \/\ \L\ \   
+%   \ \ \ /\ \/\ \ /'___\ /'__`\   /',__\/' __` __`\/\`'__\/_/\ \ \___, \  
+%    \_\ \\ \ \_\ /\ \__//\ \L\.\_/\__, `/\ \/\ \/\ \ \ \/   \ \ \/__,/\ \ 
+%    /\____\ \____\ \____\ \__/.\_\/\____\ \_\ \_\ \_\ \_\    \ \_\   \ \_\
+%    \/____/\/___/ \/____/\/__/\/_/\/___/ \/_/\/_/\/_/\/_/     \/_/    \/_/
+"""
+
 from typing import Tuple, List, Callable
 import autograd.numpy as np
 from scipy.optimize import minimize_scalar, minimize
