@@ -88,4 +88,3 @@ print(f"Selected items: {selected_items}")
 - Explanation of the algorithms: https://en.wikipedia.org/wiki/Knapsack_problem
 - `cvxpy` library: https://www.cvxpy.org/
 - `pyscipopt` library needed for MIP implementation: https://pypi.org/project/PySCIPOpt/
-```
