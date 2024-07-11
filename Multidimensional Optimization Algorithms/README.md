@@ -89,5 +89,3 @@ print(f"Iterations: {iterations}")
 - [SciPy Optimization Documentation](https://docs.scipy.org/doc/scipy/reference/optimize.html)
 
 ---
-
-Feel free to adjust the formatting, add more examples, or include specific details about each function based on your project requirements.
