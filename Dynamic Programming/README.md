@@ -16,7 +16,7 @@ pip install cvxpy pyscipopt
 1. **Dynamic Programming**: Solves the 0-1 knapsack problem using dynamic programming.
 2. **Mixed Integer Programming (MIP)**: Solves the 0-1 knapsack problem using mixed integer programming with the `cvxpy` and `pyscipopt` libraries.
 
-## Usage
+## Usage Examples
 
 ### Fractional Knapsack using Greedy Algorithm
 
@@ -89,5 +89,3 @@ print(f"Selected items: {selected_items}")
 - `cvxpy` library: https://www.cvxpy.org/
 - `pyscipopt` library needed for MIP implementation: https://pypi.org/project/PySCIPOpt/
 ```
-
-This README provides an overview of the module, descriptions of the implemented algorithms, examples of how to use each function, and links to necessary dependencies and references.
