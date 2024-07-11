@@ -1,27 +1,27 @@
 """
-Módulo de implementación de algoritmos para problemas de optimización discreta,
-incluyendo soluciones para el problema de la mochila fraccionaria y el problema de la mochila 0-1.
+Module for implementing algorithms for discrete optimization problems,
+including solutions for the fractional knapsack problem and the 0-1 knapsack problem.
 
-####Autores:
+#### Authors:
 - Lucas Miralles
 - Saúl de los Reyes
 
-####Algoritmos Implementados:
-- Mochila Fraccionaria: mediante un algoritmo greedy.
-- Mochila Fraccionaria: mediante programación lineal (PL) con la librería `cvxpy`.
-- Mochila 0-1: mediante programación dinámica.
-- Mochila 0-1: mediante programación lineal entera mixta (MIP) con las librerías
-               `cvxpy`,`pyscipopt`.
+#### Implemented Algorithms:
+- Fractional Knapsack: using a greedy algorithm.
+- Fractional Knapsack: using linear programming (LP) with the `cvxpy` library.
+- 0-1 Knapsack: using dynamic programming.
+- 0-1 Knapsack: using mixed integer programming (MIP) with the libraries
+               `cvxpy`, `pyscipopt`.
 
-Para obtener más detalles sobre cómo utilizar cada función, consulta la documentación interna
-de cada una.
+For more details on how to use each function, refer to the internal documentation
+of each function.
 
-*Se necesitan descargar las librerías `cvxpy` y `pyscipopt`.*
+*The libraries `cvxpy` and `pyscipopt` need to be downloaded.*
 
-####Referencias:
-- Explicación de los algoritmos: https://en.wikipedia.org/wiki/Knapsack_problem
-- Librería `cvxpy`: https://www.cvxpy.org/
-- Librería `pyscipopt` necesaria para la implementación MIP: https://pypi.org/project/PySCIPOpt/
+#### References:
+- Explanation of the algorithms: https://en.wikipedia.org/wiki/Knapsack_problem
+- `cvxpy` library: https://www.cvxpy.org/
+- `pyscipopt` library needed for MIP implementation: https://pypi.org/project/PySCIPOpt/
 """
 from typing import Tuple, Dict
 from collections import OrderedDict
