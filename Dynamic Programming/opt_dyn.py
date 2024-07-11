@@ -2,9 +2,14 @@
 Module for implementing algorithms for discrete optimization problems,
 including solutions for the fractional knapsack problem and the 0-1 knapsack problem.
 
-#### Authors:
-- Lucas Miralles
-- Saúl de los Reyes
+#### Author:
+  ___                                                       _     __      
+ /\_ \                                                    /' \  /'_ `\    
+ \//\ \   __  __   ___     __      ____   ___ ___   _ __ /\_, \/\ \L\ \   
+   \ \ \ /\ \/\ \ /'___\ /'__`\   /',__\/' __` __`\/\`'__\/_/\ \ \___, \  
+    \_\ \\ \ \_\ /\ \__//\ \L\.\_/\__, `/\ \/\ \/\ \ \ \/   \ \ \/__,/\ \ 
+    /\____\ \____\ \____\ \__/.\_\/\____\ \_\ \_\ \_\ \_\    \ \_\   \ \_\
+    \/____/\/___/ \/____/\/__/\/_/\/___/ \/_/\/_/\/_/\/_/     \/_/    \/_/
 
 #### Implemented Algorithms:
 - Fractional Knapsack: using a greedy algorithm.
@@ -14,7 +19,7 @@ including solutions for the fractional knapsack problem and the 0-1 knapsack pro
                `cvxpy`, `pyscipopt`.
 
 For more details on how to use each function, refer to the internal documentation
-of each function.
+of each one.
 
 *The libraries `cvxpy` and `pyscipopt` need to be downloaded.*
 
