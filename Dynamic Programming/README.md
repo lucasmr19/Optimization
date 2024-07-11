@@ -1,11 +1,8 @@
-Sure, here's a basic README for the knapsack problem algorithms:
-
-```markdown
 # Discrete Optimization Algorithms Module
 
 This code file contains basic Python implementations of optimization algorithms for solving the fractional knapsack problem and the 0-1 knapsack problem. Note: It uses the `cvxpy` and `pyscipopt` libraries, so make sure you have them installed before running the code:
 
-```sh
+```bash
 pip install cvxpy pyscipopt
 ```
 
