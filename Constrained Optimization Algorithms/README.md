@@ -19,29 +19,10 @@ pip install numpy
 pip install scipy
 ```
 
-## Function: `penalty_method`
+## Functions: 
 
-This function implements the Penalty Method for constrained optimization.
-
-### Parameters
-
-- `x` (np.array): Initial guess for the optimization.
-- `f` (Callable): Objective function to be minimized.
-- `equality_constraints` (Callable, optional): Function representing equality constraints \( h_i(x) = 0 \).
-- `inequality_constraints` (Callable, optional): Function representing inequality constraints \( g(x) \leq 0 \).
-- `maxiter` (int, optional): Maximum number of iterations. Default is 100.
-- `tol` (float, optional): Tolerance for convergence. Default is \( 1 \times 10^{-6} \).
-- `p` (int, optional): Exponent for the penalty term. Default is 2.
-- `lr` (float, optional): Initial penalty parameter. Default is 1.
-- `lr_incr` (float, optional): Penalty parameter increment factor. Default is 2.
-- `method` (str, optional): Optimization method used for unconstrained optimization. Default is 'BFGS'.
-
-### Returns
-
-- `Tuple[np.array, List[np.array], int]`:
-  - `x` (np.array): Optimal point found.
-  - `intermediate_points` (List[np.array]): List of intermediate points.
-  - `nit` (int): Number of iterations.
+- `penalty_method`: This function implements the Penalty Method for constrained optimization.
+- 
 
 ### Example Usage
 
