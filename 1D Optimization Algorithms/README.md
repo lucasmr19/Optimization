@@ -35,13 +35,13 @@ def x_sin_exp(x):
 a,b, = -3,3 #Choose the interval
 
 # 1: Graph the function to make sure in [a,b] there's only one root
-x_data = np.linspace(-3,3, 1000)
+x_data = np.linspace(a,b, 1000)
 y_data = 0.5 -(x_data + np.sin(x_data)) * np.exp(-x_data**2.0)
 plt.figure(figsize=(10,6))
 plt.title('$f(x) = 0.5 -(x + sin(x))e^{-x^2}$')
-plt.xlabel("Eje X")
-plt.ylabel("Eje Y")
-plt.xticks(np.linspace(-3,3,20),rotation = 45)
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.xticks(np.linspace(a,b,20),rotation = 45)
 plt.plot(x_data, y_data, label ='$f(x)$')
 plt.plot(0.2706456263003202, 0, marker = 'x', label = '$x_1$' )
 plt.plot(1.2057799467154835 , 0, marker = 'x', label = '$x_2$' )
@@ -50,10 +50,20 @@ plt.axhline(color='black')
 plt.legend()
 plt.show()
 
-#2. Use the method:
+#2. Use the method in each root:
 a,b = 0.16,0.5 # Interval with only one root
-root, iterations = bisection(f, a, b)
+root, iterations = bisection(x_sin_exp, a, b, tol=1e-10)
 print(f"Root found: {root} after {iterations} iterations.")
+
+a,b = 1.1,1.5 # Interval with only one root
+root, iterations = bisection(x_sin_exp, a, b, tol=1e-10)
+print(f"Root found: {root} after {iterations} iterations.")
+```
+
+![image](https://github.com/user-attachments/assets/94210e27-378e-4ad3-a87f-83236e58cca4)
+```bash
+Root found: 0.27064562629908323 after 29 iterations.
+Root found: 1.2057799467816952 after 31 iterations.
 ```
 
 ### Exceptions
