@@ -60,7 +60,8 @@ root, iterations = bisection(x_sin_exp, a, b, tol=1e-10)
 print(f"Root found: {root} after {iterations} iterations.")
 ```
 
-![image](https://github.com/user-attachments/assets/94210e27-378e-4ad3-a87f-83236e58cca4)
+![image](https://github.com/user-attachments/assets/b9547259-0eff-4d82-a167-8da3b9aea19d)
+
 ```bash
 Root found: 0.27064562629908323 after 29 iterations.
 Root found: 1.2057799467816952 after 31 iterations.
