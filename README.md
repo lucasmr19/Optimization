@@ -1,7 +1,12 @@
 # Optimization Algorithms Repository
 
+<p align="center">
+  <img src="./example.png" width="800"/>
+</p>
+
 Welcome to the **Optimization Algorithms Repository**.
 This repository provides a collection of Python implementations for a variety of optimization algorithms. These range from one-dimensional optimization methods to multidimensional techniques, constrained optimization, and dynamic programming solutions.
+
 
 ## Table of Contents
 
