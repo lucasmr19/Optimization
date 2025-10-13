@@ -1,7 +1,7 @@
 # Optimization Algorithms Repository
 
 <p align="center">
-  <img src="./example.png" width="800"/>
+  <img src="./example2.png" width="800"/>
 </p>
 
 Welcome to the **Optimization Algorithms Repository**.
