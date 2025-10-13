@@ -75,5 +75,3 @@ This repository provides a collection of Python implementations for a variety of
 
 * **Description:** Dynamic programming solution to the 0/1 knapsack problem.
 * **File:** `knapsack_problem.py`
-
-Would you like me to also add a **“Getting Started”** or **“How to Run”** section (with installation and usage examples) to make it more complete and professional for GitHub?
